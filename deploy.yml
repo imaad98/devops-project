@@ -1,0 +1,28 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull Docker image from Docker Hub
+      docker_image:
+        name: imaad98/devops-flask-app:latest  # Replace with your Docker Hub username
+        source: pull
+
+    - name: Run Docker container
+      docker_container:
+        name: devops-flask-app
+        image: imaad98/devops-flask-app:latest  # Ensure this matches your pushed image
+        ports:
+          - "5000:5000"
+        state: started
+
